@@ -247,15 +247,10 @@ Stripe e Mercado Pago enviam notificações para rotas específicas da aplicaç�
 
 ---
 
-## Licença
-
-Projeto para fins educacionais e de portfólio.
-
----
-
 ## Autor
 
 Rubens Paulo  
+
 
 
 
