@@ -28,7 +28,7 @@ O projeto foi desenvolvido com apoio da ferramenta Cursor para acelerar implemen
 
 - Autenticação com NextAuth (JWT)
 - Sistema de perfis de criador
-- lanos de assinatura personalizados
+- Planos de assinatura personalizados
 - Conteúdo exclusivo para assinantes ativos
 - Pagamentos via:
   - Stripe (Cartão de crédito)
@@ -250,6 +250,7 @@ Stripe e Mercado Pago enviam notificações para rotas específicas da aplicaç�
 ## Autor
 
 Rubens Paulo  
+
 
 
 
