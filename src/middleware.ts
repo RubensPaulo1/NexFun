@@ -2,19 +2,19 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
-// Paths that require authentication
+// require authentication
 const protectedPaths = [
   '/dashboard',
   '/settings',
   '/onboarding',
 ]
 
-// Paths that require admin role
+// admin role
 const adminPaths = [
   '/admin',
 ]
 
-// Paths that are only for unauthenticated users
+// unauthenticated users
 const authPaths = [
   '/login',
   '/register',
@@ -98,4 +98,5 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|public).*)',
   ],
 }
+
 
