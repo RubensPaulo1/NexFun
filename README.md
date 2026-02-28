@@ -6,9 +6,6 @@
 ![MercadoPago](https://img.shields.io/badge/MercadoPago-PIX-009EE3)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-38B2AC)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/RubensPaulo1/NexFan)
-![GitHub last commit](https://img.shields.io/github/last-commit/RubensPaulo1/NexFan)
-![GitHub stars](https://img.shields.io/github/stars/RubensPaulo1/NexFan?style=social)
 
 Plataforma SaaS de monetização para criadores de conteúdo com sistema de assinaturas recorrentes, controle de acesso premium e integração com múltiplos gateways de pagamento (Stripe e Mercado Pago via PIX).
 
@@ -260,6 +257,7 @@ Stripe e Mercado Pago enviam notificações para rotas específicas da aplicaç�
 ## Autor
 
 Rubens Paulo  
+
 
 
 
