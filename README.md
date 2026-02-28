@@ -184,12 +184,6 @@ Principais entidades:
 
 ---
 
-
-<img width="1920" height="1080" alt="3" src="https://github.com/user-attachments/assets/ced555d6-740b-44e0-8f21-0abb2125942a" />
-
-
----
-
 ## Instalação
 
 ```bash
@@ -257,6 +251,7 @@ Stripe e Mercado Pago enviam notificações para rotas específicas da aplicaç�
 ## Autor
 
 Rubens Paulo  
+
 
 
 
