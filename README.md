@@ -186,7 +186,7 @@ Principais entidades:
 ## Instalação
 
 ```bash
-git clone https://github.com/seuusuario/nexfan.git
+git clone https://github.com/RubensPaulo1/NexFan.git
 cd nexfan
 npm install
 npx prisma migrate dev
@@ -250,6 +250,7 @@ Stripe e Mercado Pago enviam notificações para rotas específicas da aplicaç�
 ## Autor
 
 Rubens Paulo  
+
 
 
 
