@@ -1,0 +1,16 @@
+<svg viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Symbol -->
+  <g transform="translate(0, 5)">
+    <circle cx="20" cy="20" r="16" stroke="#3366FF" stroke-width="3" fill="none"/>
+    <path d="M10 30L30 10" stroke="#3366FF" stroke-width="3" stroke-linecap="round"/>
+    <path d="M10 10L30 30" stroke="#3366FF" stroke-width="3" stroke-linecap="round" stroke-opacity="0.4"/>
+    <circle cx="10" cy="10" r="2.5" fill="#3366FF"/>
+    <circle cx="30" cy="30" r="2.5" fill="#3366FF"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="50" y="35" font-family="Montserrat, sans-serif" font-size="28" font-weight="600">
+    <tspan fill="#3366FF">NEX</tspan><tspan fill="#0A0D1A">FAN</tspan>
+  </text>
+</svg>
+

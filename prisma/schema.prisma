@@ -1,0 +1,427 @@
+// NexFan Database Schema
+// SQLite for local development
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  name          String?
+  username      String?   @unique
+  avatar        String?
+  bio           String?
+  role          String    @default("USER") // USER, CREATOR, ADMIN
+  ageVerified   Boolean   @default(false)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  creatorProfile CreatorProfile?
+  subscriptions Subscription[]
+  sentReports   Report[]        @relation("ReportSender")
+  receivedReports Report[]      @relation("ReportTarget")
+  notifications Notification[]
+  refreshTokens RefreshToken[]
+  savedPosts    SavedPost[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// CREATOR PROFILE & CONTENT
+// ============================================
+
+model CreatorProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  displayName     String
+  slug            String   @unique
+  coverImage      String?
+  socialLinks     String?  // JSON string: { twitter: "", instagram: "", website: "" }
+  stripeAccountId String?
+  mpAccountId     String?  // Mercado Pago account
+  isVerified      Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  totalEarnings   Float    @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plans         Plan[]
+  posts         Post[]
+  subscribers   Subscription[]
+  payouts       Payout[]
+  verificationRequest VerificationRequest?
+  contract      CreatorContract?
+
+  @@map("creator_profiles")
+}
+
+// ============================================
+// VERIFICATION SYSTEM
+// ============================================
+
+model VerificationRequest {
+  id              String   @id @default(cuid())
+  creatorId       String   @unique
+  
+  // Personal Data (encrypted/sensitive)
+  fullName        String
+  cpf             String   // Brazilian tax ID
+  rg              String   // Brazilian ID number
+  rgIssuer        String?  // Issuing authority (SSP, DETRAN, etc.)
+  birthDate       String?  // Date of birth
+  
+  // Document Photos
+  documentFrontUrl String  // Front of the document
+  documentBackUrl  String  // Back of the document
+  selfieUrl        String  // Selfie with document
+  
+  // Request Status
+  status          String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  rejectionReason String?  // Reason if rejected
+  
+  // Admin who reviewed
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  creator         CreatorProfile @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@map("verification_requests")
+}
+
+model CreatorContract {
+  id              String   @id @default(cuid())
+  creatorId       String   @unique
+  
+  // Contract data
+  contractHtml    String   // Full HTML of the filled contract
+  contractUrl     String?  // URL to access/download the contract
+  
+  // Signing info
+  signedAt        DateTime @default(now())
+  ipAddress       String?
+  userAgent       String?
+  
+  // Contract version
+  contractVersion String   @default("1.0") // Version of the contract template
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  creator         CreatorProfile @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  
+  @@map("creator_contracts")
+}
+
+model Plan {
+  id          String   @id @default(cuid())
+  creatorId   String
+  name        String
+  description String?
+  price       Float
+  currency    String   @default("BRL")
+  interval    String   @default("MONTHLY") // MONTHLY, QUARTERLY, YEARLY
+  benefits    String   // JSON array string
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Stripe/MP IDs
+  stripePriceId String?
+  mpPlanId      String?
+
+  // Relations
+  creator       CreatorProfile @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+  postAccess    PostPlanAccess[]
+
+  @@map("plans")
+}
+
+model Post {
+  id           String    @id @default(cuid())
+  creatorId    String
+  title        String
+  content      String?
+  isPublic     Boolean   @default(false)
+  isPinned     Boolean   @default(false)
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  creator      CreatorProfile @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  media        Media[]
+  planAccess   PostPlanAccess[]
+  likes        Like[]
+  comments     Comment[]
+  savedPosts   SavedPost[]
+
+  @@map("posts")
+}
+
+model PostPlanAccess {
+  postId String
+  planId String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@id([postId, planId])
+  @@map("post_plan_access")
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  postId    String
+  type      String   // IMAGE, VIDEO, AUDIO, FILE
+  url       String
+  thumbnail String?
+  filename  String?
+  mimeType  String?
+  size      Int?     // in bytes
+  width     Int?
+  height    Int?
+  duration  Int?     // for videos, in seconds
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("media")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("likes")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model SavedPost {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("saved_posts")
+}
+
+// ============================================
+// SUBSCRIPTIONS & PAYMENTS
+// ============================================
+
+model Subscription {
+  id                 String   @id @default(cuid())
+  userId             String
+  creatorId          String
+  planId             String
+  status             String   @default("PENDING") // PENDING, ACTIVE, CANCELED, PAST_DUE, PAUSED, EXPIRED
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  canceledAt         DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Payment provider IDs
+  stripeSubscriptionId String?
+  mpSubscriptionId     String?
+
+  // Relations
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creator  CreatorProfile @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  plan     Plan           @relation(fields: [planId], references: [id])
+  payments Payment[]
+
+  @@unique([userId, creatorId])
+  @@map("subscriptions")
+}
+
+model Payment {
+  id                String    @id @default(cuid())
+  subscriptionId    String
+  amount            Float
+  currency          String    @default("BRL")
+  status            String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED
+  provider          String    // STRIPE, MERCADOPAGO
+  providerPaymentId String?
+  paidAt            DateTime?
+  failedAt          DateTime?
+  failureReason     String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Payout {
+  id               String    @id @default(cuid())
+  creatorId        String
+  amount           Float
+  currency         String    @default("BRL")
+  status           String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  provider         String    // STRIPE, MERCADOPAGO
+  providerPayoutId String?
+  processedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  creator CreatorProfile @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@map("payouts")
+}
+
+// ============================================
+// MODERATION & ADMIN
+// ============================================
+
+model Report {
+  id          String    @id @default(cuid())
+  senderId    String
+  targetId    String
+  targetType  String    // USER, POST, COMMENT
+  reason      String    // SPAM, HARASSMENT, INAPPROPRIATE_CONTENT, COPYRIGHT, SCAM, OTHER
+  description String?
+  status      String    @default("PENDING") // PENDING, INVESTIGATING, RESOLVED, DISMISSED
+  resolvedBy  String?
+  resolvedAt  DateTime?
+  resolution  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  sender User @relation("ReportSender", fields: [senderId], references: [id])
+  target User @relation("ReportTarget", fields: [targetId], references: [id])
+
+  @@map("reports")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  // Notification types: NEW_SUBSCRIBER, NEW_COMMENT, NEW_POST, PAYMENT_SUCCESS, PAYMENT_FAILED, PAYMENT_RECEIVED,
+  // PAYOUT_COMPLETED, PAYOUT_FAILED, SUBSCRIPTION_CANCELED, SUBSCRIBER_CANCELED, REPORT_UPDATE, SYSTEM
+  type      String
+  title     String
+  message   String
+  data      String?  // JSON string
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  metadata  String?  // JSON string
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
