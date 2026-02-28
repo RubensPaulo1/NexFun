@@ -144,13 +144,19 @@ Principais entidades:
 - Login
  <img width="2560" height="1277" alt="1" src="https://github.com/user-attachments/assets/eaf92317-cd50-4f7e-b76f-8476535c1927" />
 
+
+
  
 - Dashboard Criador
  <img width="2559" height="1213" alt="Captura de tela 2025-12-01 024900" src="https://github.com/user-attachments/assets/7e4a8428-b83e-4a8d-a41a-53934e6ed7a9" />
 
 
+
+
 - Página do criador
  <img width="2559" height="1355" alt="Captura de tela 2026-02-02 180655" src="https://github.com/user-attachments/assets/6cdaf291-4069-4a45-a1ca-b2588f89c69f" />
+
+
 
 
 - Pagamento
@@ -158,8 +164,12 @@ Principais entidades:
 
 
 
+
+
 - Pagamento Pix
  <img width="2556" height="1272" alt="6" src="https://github.com/user-attachments/assets/7a2625e6-a2a4-4c1a-8f68-8b6c82a008db" />
+
+
 
 
 - Pagamento Stripe
@@ -246,6 +256,7 @@ Projeto para fins educacionais e de portfólio.
 ## Autor
 
 Rubens Paulo  
+
 
 
 
