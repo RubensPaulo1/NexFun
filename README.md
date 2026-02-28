@@ -149,12 +149,13 @@ Principais entidades:
  
 - Dashboard Criador
 <img width="1920" height="1080" alt="Captura de tela 2025-12-01 024900" src="https://github.com/user-attachments/assets/7e4a8428-b83e-4a8d-a41a-53934e6ed7a9" />
-<img width="1920" height="1080" alt="3" src="https://github.com/user-attachments/assets/ced555d6-740b-44e0-8f21-0abb2125942a" />
+
 
 ---
 
 - Página do criador
 <img width="1920" height="1080" alt="Captura de tela 2026-02-02 180655" src="https://github.com/user-attachments/assets/6cdaf291-4069-4a45-a1ca-b2588f89c69f" />
+<img width="1920" height="1080" alt="3" src="https://github.com/user-attachments/assets/ced555d6-740b-44e0-8f21-0abb2125942a" />
 
 ---
 
@@ -255,6 +256,7 @@ Projeto para fins educacionais e de portfólio.
 ## Autor
 
 Rubens Paulo  
+
 
 
 
