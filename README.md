@@ -144,7 +144,7 @@ Principais entidades:
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 
 
@@ -257,6 +257,7 @@ Stripe e Mercado Pago enviam notificações para rotas específicas da aplicaç�
 ## Autor
 
 Rubens Paulo  
+
 
 
 
