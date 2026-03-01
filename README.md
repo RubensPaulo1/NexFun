@@ -26,11 +26,7 @@ A plataforma permite:
 - Estrutura preparada para escalar como SaaS multi-tenant
 
 ---
-## Desenvolvimento Assistido por IA
 
-O projeto foi desenvolvido com apoio da ferramenta Cursor para acelerar implementação e refatorações, mantendo total compreensão e controle arquitetural das decisões técnicas.
-
----
 ## Funcionalidades
 
 - Autenticação com NextAuth (JWT)
@@ -251,6 +247,7 @@ Stripe e Mercado Pago enviam notificações para rotas específicas da aplicaç�
 ## Autor
 
 Rubens Paulo  
+
 
 
 
